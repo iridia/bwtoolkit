@@ -14,16 +14,18 @@
 
 - (void)ibPopulateKeyPaths:(NSMutableDictionary *)keyPaths 
 {
+	
     [super ibPopulateKeyPaths:keyPaths];
-    [[keyPaths objectForKey:IBAttributeKeyPaths] addObjectsFromArray:[NSArray arrayWithObjects:@"topBorderColor", @"bottomBorderColor", @"fillStartingColor", @"fillEndingColor",
-																	  @"fillColor", @"topInsetAlpha", @"bottomInsetAlpha", @"hasTopBorder", @"hasBottomBorder", @"hasGradient", nil]];
+    [[keyPaths objectForKey:IBAttributeKeyPaths] addObjectsFromArray:[NSArray arrayWithObjects:@"topBorderColor", @"rightBorderColor", @"bottomBorderColor", @"leftBorderColor", @"fillStartingColor", @"fillEndingColor", @"fillColor", @"topInsetAlpha", @"rightInsetAlpha", @"bottomInsetAlpha", @"leftInsetAlpha", @"hasTopBorder", @"hasRightBorder", @"hasBottomBorder", @"hasLeftBorder", @"hasGradient", @"isVertical", nil]];
+
 }
 
 - (void)ibPopulateAttributeInspectorClasses:(NSMutableArray *)classes 
 {
-    [super ibPopulateAttributeInspectorClasses:classes];
 
+    [super ibPopulateAttributeInspectorClasses:classes];
     [classes addObject:[BWGradientBoxInspector class]];
+
 }
 
 - (NSView *)ibDesignableContentView
