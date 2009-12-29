@@ -122,8 +122,7 @@ static NSToolbar *editableToolbar;
 	NSArray *defaultItemIdentfiers = [super _defaultItemIdentifiers];
 	NSArray *defaultIBItemIdentifiers = [NSArray arrayWithObjects:@"NSToolbarSeparatorItem",@"NSToolbarSpaceItem",@"NSToolbarFlexibleSpaceItem",nil];
 	
-	NSArray *idealDefaultItemIdentifiers = [NSArray arrayWithObjects:@"0D5950D1-D4A8-44C6-9DBC-251CFEF852E2",@"BWToolbarShowColorsItem",
-											@"BWToolbarShowFontsItem",@"7E6A9228-C9F3-4F21-8054-E4BF3F2F6BA8",nil];
+	NSArray *idealDefaultItemIdentifiers = [NSArray arrayWithObjects:@"0D5950D1-D4A8-44C6-9DBC-251CFEF852E2",@"BWToolbarShowColorsItem", @"BWToolbarShowFontsItem",@"7E6A9228-C9F3-4F21-8054-E4BF3F2F6BA8",nil];
 	
 	if ([defaultItemIdentfiers isEqualToArray:defaultIBItemIdentifiers])
 	{
@@ -211,12 +210,9 @@ static NSToolbar *editableToolbar;
 		[self setEditableToolbar:self];
 		
 		if ([helper contentViewsByIdentifier].count == 0)
-			[helper setInitialIBWindowSize:[[[self editableToolbar] _window] frame].size];
+		[helper setInitialIBWindowSize:[[[self editableToolbar] _window] frame].size];
 			
-		[[NSNotificationCenter defaultCenter] addObserver:self 
-												 selector:@selector(windowDidResize:)
-													 name:NSWindowDidResizeNotification 
-												   object:[[self editableToolbar] _window]];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowDidResize:) name:NSWindowDidResizeNotification object:[[self editableToolbar] _window]];
 
 	}
 	

@@ -107,6 +107,8 @@
 
 - (void) drawRect:(NSRect)rect {
 
+	if ((self.bounds.size.width == 0) || (self.bounds.size.height == 0)) return;
+	
 	if (hasGradient) {
 
 		NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:fillStartingColor endingColor:fillEndingColor];

@@ -42,7 +42,7 @@
 	[super ibDocument:fp8 willStartSimulatorWithContext:fp12];
 	
 	// Simulating seems to work fine in IB 3.1.1 (672) so we won't show the alert if the user is running that version
-	if ([[IBDocument currentIBFrameworkVersion] intValue] != 672)
+	if ([[IBDocument currentIBFrameworkVersion] intValue] <= 672)
 	{
 		NSAlert *alert = [NSAlert alertWithMessageText:@"Toolbar not compatible with simulator" defaultButton:@"OK" alternateButton:nil otherButton:nil informativeTextWithFormat:@"The selectable toolbar is not yet compatible with the IB simulator. Quit the simulator and revert to the last saved document. Sorry for the inconvenience."];
 		[alert runModal];

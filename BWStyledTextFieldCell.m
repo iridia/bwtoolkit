@@ -122,8 +122,8 @@
 
 #pragma mark Shadow-specific code
 
-- (void)changeShadow
-{
+- (void)changeShadow {
+
 	NSShadow *tempShadow = [[[NSShadow alloc] init] autorelease];
 	[tempShadow setShadowColor:shadowColor];
 		
@@ -151,24 +151,29 @@
 	if ([[self controlView] window] == nil)
 		return;
 	
-	if (self.hasGradient)
-	{	
-		float textHeight = [[self font] ascender] - [[self font] descender];
-		
-		NSSize boundSizeWithFullWidth = NSMakeSize([self controlView].frame.size.width,ceilf(textHeight));
-		
-		NSImage *image = [[[NSImage alloc] initWithSize:boundSizeWithFullWidth] autorelease];
-		
-		NSGradient *gradient = [[[NSGradient alloc] initWithStartingColor:self.startingColor endingColor:self.endingColor] autorelease];
-		
-		[image lockFocus];
-		[gradient drawInRect:NSMakeRect(0,0,boundSizeWithFullWidth.width,boundSizeWithFullWidth.height) angle:270];
-		[image unlockFocus];
-		
-		NSColor *color = [NSColor colorWithPatternImage:image];
-		
-		[self setTextColor:color];
-	}
+	if (!self.hasGradient) return;
+	
+	NSSize boundSizeWithFullWidth = NSMakeSize(
+							   
+		[self controlView].frame.size.width,
+		[self controlView].frame.size.height
+						   
+	);
+	
+	NSLog(@"Bound size: %f, %f", [self controlView].frame.size.width, [self controlView].frame.size.height);
+	
+	NSImage *image = [[[NSImage alloc] initWithSize:boundSizeWithFullWidth] autorelease];
+	
+	NSGradient *gradient = [[[NSGradient alloc] initWithStartingColor:self.startingColor endingColor:self.endingColor] autorelease];
+	
+	[image lockFocus];
+	[gradient drawInRect:NSMakeRect(0,0,boundSizeWithFullWidth.width,boundSizeWithFullWidth.height) angle:270];
+	[image unlockFocus];
+	
+	NSColor *color = [NSColor colorWithPatternImage:image];
+	
+	[self setTextColor:color];
+
 }
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
@@ -212,43 +217,61 @@
     }
 }
 
-- (void)setSolidColor:(NSColor *)color
-{
-	if (solidColor != color) 
-	{
+- (void)setSolidColor:(NSColor *)color {
+
+	if (solidColor == color) return;
+
         [solidColor release];
         solidColor = [color retain];
 		
-		[self setTextColor:solidColor];
-    }
+	[self setTextColor:solidColor];
+	
 }
 
-- (void)setHasGradient:(BOOL)flag
-{
+
+
+
+
+- (void)setHasGradient:(BOOL)flag {
+
 	hasGradient = flag;
 	
-	if (flag)
+	if (flag) {
+		
 		[self applyGradient];
-	else
+		
+	} else {
+
 		[self setTextColor:self.solidColor];
+		
+	}
+
 }
 
-- (void)setShadowIsBelow:(BOOL)flag
-{
+
+
+
+
+- (void)setShadowIsBelow:(BOOL)flag {
+
 	shadowIsBelow = flag;
-	
 	[self changeShadow];
+
 }
 
-- (void)setShadowColor:(NSColor *)color
-{
-	if (shadowColor != color) 
-	{
+
+
+
+
+- (void)setShadowColor:(NSColor *)color {
+
+	if (shadowColor == color) return;
+
         [shadowColor release];
         shadowColor = [color retain];
 		
-		[self changeShadow];
-    }
+	[self changeShadow];
+
 }
 
 @end
