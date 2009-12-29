@@ -160,14 +160,21 @@
 						   
 	);
 	
-	NSLog(@"Bound size: %f, %f", [self controlView].frame.size.width, [self controlView].frame.size.height);
-	
 	NSImage *image = [[[NSImage alloc] initWithSize:boundSizeWithFullWidth] autorelease];
 	
 	NSGradient *gradient = [[[NSGradient alloc] initWithStartingColor:self.startingColor endingColor:self.endingColor] autorelease];
 	
 	[image lockFocus];
-	[gradient drawInRect:NSMakeRect(0,0,boundSizeWithFullWidth.width,boundSizeWithFullWidth.height) angle:270];
+
+	[gradient drawInRect: NSMakeRect (
+
+		0,
+		0,
+		boundSizeWithFullWidth.width,
+		boundSizeWithFullWidth.height
+		
+	) angle:270];
+		
 	[image unlockFocus];
 	
 	NSColor *color = [NSColor colorWithPatternImage:image];
@@ -178,15 +185,19 @@
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
+
 	[[NSGraphicsContext currentContext] saveGraphicsState];
 	
 	float textHeight = [[self font] ascender] - [[self font] descender];
 	
 	float deltaHeight = cellFrame.size.height - textHeight;
-	float halfDeltaHeight = deltaHeight / 2;
+
+	float halfDeltaHeight = 0;
+//	float halfDeltaHeight = deltaHeight / 2;
 	
 	float yOrigin = [[controlView superview] convertRect:[controlView frame] toView:nil].origin.y;
-	[[NSGraphicsContext currentContext] setPatternPhase:NSMakePoint(0, yOrigin + halfDeltaHeight)];
+
+	[[NSGraphicsContext currentContext] setPatternPhase:NSMakePoint(0, yOrigin + halfDeltaHeight)];	
 	
 	[super drawInteriorWithFrame:cellFrame inView:controlView];
 	
