@@ -194,8 +194,10 @@
 
 	float halfDeltaHeight = 0;
 //	float halfDeltaHeight = deltaHeight / 2;
+
+	float yOrigin = [[controlView superview] convertRect:[controlView frame] toView:nil].origin.y;
 	
-	float yOrigin = [[controlView superview] convertRect:[controlView frame] toView:[controlView superview]].origin.y;
+//	float yOrigin = [[controlView superview] convertRect:[controlView frame] toView:[controlView superview]].origin.y;
 
 	[[NSGraphicsContext currentContext] setPatternPhase:NSMakePoint(0, yOrigin + halfDeltaHeight)];	
 	
