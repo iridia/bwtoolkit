@@ -13,6 +13,12 @@
 
 @synthesize urlString;
 
++ (void)initialize {
+
+	[self exposeBinding:@"urlString"];
+
+}
+
 -(void)awakeFromNib
 {
 	[self setTarget:self];
