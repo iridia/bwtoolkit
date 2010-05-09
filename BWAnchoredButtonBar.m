@@ -304,7 +304,7 @@ static float scaleFactor = 0.0f;
 {
 	NSSplitView *splitView = [self splitView];
 	
-	if ([splitView delegate] == self)
+	if ([[splitView delegate] isEqual:self])
 		[splitView setDelegate:nil];
 	
 	[super dealloc];
