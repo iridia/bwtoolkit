@@ -153,6 +153,25 @@
 	
 	if (!self.hasGradient) return;
 	
+	BOOL couldApplyGradient = YES;
+	
+	if ([NSColor respondsToSelector:@selector(valueByTransitioningFromTargetRuntime:toTargetRuntime:)]) {
+	
+		couldApplyGradient = NO;
+	
+		NSAlert *alert = [NSAlert alertWithMessageText:@"BWStyledTextFieldCell not compatible with IB + iPhone SDK 3.2" defaultButton:@"OK" alternateButton:nil otherButton:nil informativeTextWithFormat:@"BWStyledTextFieldCell is not yet compatible with Cocoa Touch’s IB plugin from the iPhone SDK.  Move its bundle elsewhere — sorry for the inconvenience."];
+
+		[alert runModal];
+
+	}
+	
+	if (!couldApplyGradient) {
+	
+		self.hasGradient = NO;
+		return;
+		
+	}
+	
 	NSSize boundSizeWithFullWidth = NSMakeSize(
 							   
 		[self controlView].frame.size.width,
@@ -183,8 +202,7 @@
 
 }
 
-- (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
-{
+- (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView {
 
 	[[NSGraphicsContext currentContext] saveGraphicsState];
 	
@@ -193,17 +211,15 @@
 	float deltaHeight = cellFrame.size.height - textHeight;
 
 	float halfDeltaHeight = 0;
-//	float halfDeltaHeight = deltaHeight / 2;
 
 	float yOrigin = [[controlView superview] convertRect:[controlView frame] toView:nil].origin.y;
 	
-//	float yOrigin = [[controlView superview] convertRect:[controlView frame] toView:[controlView superview]].origin.y;
-
 	[[NSGraphicsContext currentContext] setPatternPhase:NSMakePoint(0, yOrigin + halfDeltaHeight)];	
 	
 	[super drawInteriorWithFrame:cellFrame inView:controlView];
 	
 	[[NSGraphicsContext currentContext] restoreGraphicsState];
+
 }
 
 #pragma mark Accessors
