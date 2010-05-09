@@ -275,18 +275,20 @@ static NSToolbar *editableToolbar;
 }
 
 // Tells the toolbar to draw the selection behind the toolbar item and records the selected item identifier
-- (void)selectItemAtIndex:(int)anIndex
-{
+- (void)selectItemAtIndex:(int)anIndex {
+
 	NSArray *toolbarItems = self.items;
 	
-	if (toolbarItems.count > 1)
-	{
-		NSToolbarItem *item = [toolbarItems objectAtIndex:anIndex];
-		NSString *identifier = [item itemIdentifier];
-		[super setSelectedItemIdentifier:identifier];
-		
-		[helper setSelectedIdentifier:identifier];
-	}
+	if (anIndex < 0 || anIndex >= toolbarItems.count) return;
+	
+	if (toolbarItems.count <= 1) return;
+
+	NSToolbarItem *item = [toolbarItems objectAtIndex:anIndex];
+	NSString *identifier = [item itemIdentifier];
+	[super setSelectedItemIdentifier:identifier];
+
+	[helper setSelectedIdentifier:identifier];
+
 }
 
 // This is called when a selectable item is clicked. This is not called in IB (-setSelectedIndex: is used instead).
