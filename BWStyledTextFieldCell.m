@@ -27,12 +27,14 @@
 
 - (id)initWithCoder:(NSCoder *)decoder
 {
+
 	if ((self = [super initWithCoder:decoder]) != nil)
 	{
 		[self setShadowIsBelow:[decoder decodeBoolForKey:@"BWSTFCShadowIsBelow"]];
 		[self setHasShadow:[decoder decodeBoolForKey:@"BWSTFCHasShadow"]];
 		[self setHasGradient:[decoder decodeBoolForKey:@"BWSTFCHasGradient"]];
 		[self setShadowColor:[decoder decodeObjectForKey:@"BWSTFCShadowColor"]];
+
 		[self setPreviousAttributes:[decoder decodeObjectForKey:@"BWSTFCPreviousAttributes"]];
 		[self setStartingColor:[decoder decodeObjectForKey:@"BWSTFCStartingColor"]];
 		[self setEndingColor:[decoder decodeObjectForKey:@"BWSTFCEndingColor"]];
@@ -50,16 +52,30 @@
 		if (self.solidColor == nil)
 			self.solidColor = [NSColor greenColor];
 		
-		if (self.hasGradient)
+		if (self.hasGradient) {
+
 			[self performSelector:@selector(applyGradient) withObject:nil afterDelay:0];
+			
+		} else {
+		
+			[self setTextColor:self.solidColor];
+		
+		}
+			
+		
+			
 	}
 	return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)coder
 {
-    [super encodeWithCoder:coder];
-	
+
+//	Else, the gradient (a pattern color) will get encoded and iPhone 3.2+’s Cocoa touch plug-in hates it.
+	if ([self hasGradient]) [self setTextColor:[NSColor clearColor]];
+
+	[super encodeWithCoder:coder];
+
 	[coder encodeBool:[self shadowIsBelow] forKey:@"BWSTFCShadowIsBelow"];
 	[coder encodeBool:[self hasShadow] forKey:@"BWSTFCHasShadow"];
 	[coder encodeBool:[self hasGradient] forKey:@"BWSTFCHasGradient"];
@@ -101,23 +117,49 @@
 
 #pragma mark Text attributes
 
-- (NSDictionary *)_textAttributes
-{
+- (NSDictionary *) _textAttributes {
+
 	NSMutableDictionary *attributes = [[[NSMutableDictionary alloc] init] autorelease];
 	[attributes addEntriesFromDictionary:[super _textAttributes]];
 	
-	// Shadow code
+//	Shadow
 	if (hasShadow && [self shadow] != nil)
-		[attributes setObject:[self shadow] forKey:NSShadowAttributeName];
+	[attributes setObject:[self shadow] forKey:NSShadowAttributeName];
 	
-	// Gradient code
-	if ([previousAttributes objectForKey:@"NSFont"] != nil && [[previousAttributes objectForKey:@"NSFont"] isEqualTo:[attributes objectForKey:@"NSFont"]] == NO)
-	{
+//	Gradient
+	if ([previousAttributes objectForKey:@"NSFont"] != nil && [[previousAttributes objectForKey:@"NSFont"] isEqualTo:[attributes objectForKey:@"NSFont"]] == NO) {
+
 		[self performSelector:@selector(applyGradient) withObject:nil afterDelay:0];
 		[self setPreviousAttributes:attributes];
+
+	}
+	
+//	Cocoa touch IB Hack
+
+	if ([self respondsToSelector:@selector(ibDidAddToDesignableDocument:)]) {
+		
+		NSString *key;
+		
+		BOOL couldShowGradient = NO;
+		
+		for (key in [NSThread callStackSymbols]) {
+		
+			if ([key rangeOfString:@"drawRect"].location != NSNotFound) {
+			
+				couldShowGradient = YES;
+				break;
+			
+			}
+		
+		}
+		
+		if (!couldShowGradient)	
+		[attributes setObject:self.solidColor forKey:@"NSColor"];
+
 	}
 	
 	return attributes;
+	
 }
 
 #pragma mark Shadow-specific code
@@ -153,6 +195,8 @@
 	
 	if (!self.hasGradient) return;
 	
+	[self setTextColor:[NSColor blackColor]];	// Giving bounds
+	
 	NSSize boundSizeWithFullWidth = NSMakeSize(
 							   
 		[self controlView].frame.size.width,
@@ -161,6 +205,8 @@
 	);
 	
 	NSImage *image = [[[NSImage alloc] initWithSize:boundSizeWithFullWidth] autorelease];
+
+	NSLog(@"Making gradient out of colors %@ %@", self.startingColor, self.endingColor);
 	
 	NSGradient *gradient = [[[NSGradient alloc] initWithStartingColor:self.startingColor endingColor:self.endingColor] autorelease];
 	
@@ -177,33 +223,25 @@
 		
 	[image unlockFocus];
 	
-	NSColor *color = [NSColor colorWithPatternImage:image];
+	[self setTextColor:[NSColor colorWithPatternImage:image]];
 	
-	[self setTextColor:color];
-
 }
 
-- (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
-{
+- (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView {
 
 	[[NSGraphicsContext currentContext] saveGraphicsState];
 	
-	float textHeight = [[self font] ascender] - [[self font] descender];
+	[[NSGraphicsContext currentContext] setPatternPhase:NSMakePoint(
 	
-	float deltaHeight = cellFrame.size.height - textHeight;
-
-	float halfDeltaHeight = 0;
-//	float halfDeltaHeight = deltaHeight / 2;
-
-	float yOrigin = [[controlView superview] convertRect:[controlView frame] toView:nil].origin.y;
-	
-//	float yOrigin = [[controlView superview] convertRect:[controlView frame] toView:[controlView superview]].origin.y;
-
-	[[NSGraphicsContext currentContext] setPatternPhase:NSMakePoint(0, yOrigin + halfDeltaHeight)];	
+		0, 
+		[[controlView superview] convertRect:[controlView frame] toView:nil].origin.y + 0
+		
+	)];	
 	
 	[super drawInteriorWithFrame:cellFrame inView:controlView];
 	
 	[[NSGraphicsContext currentContext] restoreGraphicsState];
+
 }
 
 #pragma mark Accessors
