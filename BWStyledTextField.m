@@ -7,6 +7,7 @@
 //
 
 #import "BWStyledTextField.h"
+#import "BWStyledTextFieldCell.h"
 
 @implementation BWStyledTextField
 
@@ -38,12 +39,12 @@
 
 - (NSColor *)shadowColor
 {
-	return [[self cell] shadowColor];
+	return [(BWStyledTextFieldCell *)[self cell] shadowColor];
 }
 
 - (void)setShadowColor:(NSColor *)color
 {
-	[[self cell] setShadowColor:color];
+	[(BWStyledTextFieldCell *)[self cell] setShadowColor:color];
 	
 	[self setNeedsDisplay:YES];
 }
