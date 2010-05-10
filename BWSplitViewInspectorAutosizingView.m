@@ -85,12 +85,12 @@
 		// Make the new buttons represent whether the subviews are set to resize or not
 		if ([splitView isVertical])
 		{
-			if ([[[splitView subviews] objectAtIndex:i] autoresizingMask] & NSViewWidthSizable)
+			if ([(NSView *)[[splitView subviews] objectAtIndex:i] autoresizingMask] & NSViewWidthSizable)
 				[subviewButton setIntValue:1];
 		}
 		else
 		{
-			if ([[[splitView subviews] objectAtIndex:i] autoresizingMask] & NSViewHeightSizable)
+			if ([(NSView *)[[splitView subviews] objectAtIndex:i] autoresizingMask] & NSViewHeightSizable)
 				[subviewButton setIntValue:1];
 		}
 		
