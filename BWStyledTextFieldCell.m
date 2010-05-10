@@ -206,8 +206,6 @@
 	
 	NSImage *image = [[[NSImage alloc] initWithSize:boundSizeWithFullWidth] autorelease];
 
-	NSLog(@"Making gradient out of colors %@ %@", self.startingColor, self.endingColor);
-	
 	NSGradient *gradient = [[[NSGradient alloc] initWithStartingColor:self.startingColor endingColor:self.endingColor] autorelease];
 	
 	[image lockFocus];
