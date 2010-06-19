@@ -53,7 +53,10 @@
 	}
 	
 	// Create new buttons and draw them
-	float x, y;
+	
+	float x = 0;
+	float y = 0;
+	
 	int numberOfSubviews = [[splitView subviews] count];
 	
 	for (int i = 0; i < numberOfSubviews; i++)
