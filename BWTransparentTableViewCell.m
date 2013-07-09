@@ -21,6 +21,9 @@
 		else
 			textColor = [NSColor whiteColor];
 		
+   if(![self isEnabled])
+     textColor = [NSColor disabledControlTextColor];
+   
 		NSMutableDictionary *attributes = [[[NSMutableDictionary alloc] init] autorelease];
 		[attributes addEntriesFromDictionary:[[self attributedStringValue] attributesAtIndex:0 effectiveRange:NULL]];
 		[attributes setObject:textColor forKey:NSForegroundColorAttributeName];
