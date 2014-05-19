@@ -301,7 +301,9 @@ static float scaleFactor = 1.0f;
 - (void)setCollapsibleSubviewCollapsed:(BOOL)flag
 {
 	collapsibleSubviewCollapsed = flag;
-
+	
+	if (![[self toggleCollapseButton] isKindOfClass:[NSButton class]]) return;
+	
 	if (flag)
 		[[self toggleCollapseButton] setState:0];
 	else
@@ -359,9 +361,11 @@ static float scaleFactor = 1.0f;
 	if ([self toggleCollapseButton] == nil)
 	{
 		[self setToggleCollapseButton:sender];
-
-		[[toggleCollapseButton cell] setHighlightsBy:NSPushInCellMask];
-		[[toggleCollapseButton cell] setShowsStateBy:NSContentsCellMask];
+		
+		if ([[self toggleCollapseButton] isKindOfClass:[NSButton class]]) {
+			[[toggleCollapseButton cell] setHighlightsBy:NSPushInCellMask];
+			[[toggleCollapseButton cell] setShowsStateBy:NSContentsCellMask];
+		}
 	}
 	
 	
